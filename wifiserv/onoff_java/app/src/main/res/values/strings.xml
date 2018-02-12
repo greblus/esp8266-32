@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Esp8266 control</string>
+    <string name="but_off">Wyłącz</string>
+    <string name="but_on">Włącz</string>
+</resources>
