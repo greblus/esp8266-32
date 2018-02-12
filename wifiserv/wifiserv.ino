@@ -29,7 +29,14 @@ void setup() {
   Serial.println();
   Serial.print("Connecting to ");
   Serial.println(ssid);
-  
+
+  IPAddress ip(192, 168, 1, 7); // where xx is the desired IP Address
+  IPAddress gateway(192, 168, 1, 1); // set gateway to match your network
+  Serial.print(F("Setting static ip to : "));
+  Serial.println(ip);
+  IPAddress subnet(255, 255, 255, 0); // set subnet mask to match your
+    
+  WiFi.config(ip, gateway, subnet);
   WiFi.begin(ssid, password);
   
   while (WiFi.status() != WL_CONNECTED) {
