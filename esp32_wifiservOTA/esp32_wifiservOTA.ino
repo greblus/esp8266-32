@@ -94,7 +94,7 @@ void loop(){
             client.print("Click <a href=\"/ON\">here</a> to turn the LED on pin 22 ON.<br>");
             client.print("Click <a href=\"/OFF\">here</a> to turn the LED on pin 22 OFF.<br>");
             client.print("Click <a href=\"/OTA\">here</a> to turn on OTA update procedure.<br>");
-            client.print("Then run python espota.py -i \<esp_addr\> -p 3232 -f new_core.bin<br>");
+            client.print("Then run python espota.py -i ip_addr -p 3232 -f new_core.bin<br>");
             
             // The HTTP response ends with another blank line:
             client.println();
