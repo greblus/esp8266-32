@@ -12,6 +12,7 @@ void vTaskFunction( void *pvParameters )
 	{
 		/* Print out the name of this task. */
 		printf("%s on core %i\n", pcTaskName, xPortGetCoreID());
+		fflush(stdout);
 	}
 }
 
