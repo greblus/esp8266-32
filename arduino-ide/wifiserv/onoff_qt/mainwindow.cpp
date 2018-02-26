@@ -4,7 +4,7 @@
 #include "QtNetwork/QNetworkReply"
 #include "QtNetwork/QNetworkAccessManager"
 
-bool on = false;
+bool on = true;
 QNetworkAccessManager manager;
 QString url;
 
@@ -20,17 +20,24 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_off_button_clicked()
 {
-    url = ui->lineEdit->text();
-    if (on) {
-        QNetworkRequest req(QString("http://"+url+"/gpio/1"));
-        QNetworkReply *reply = manager.get(req);
-        ui->pushButton->setText(QString("Włącz"));
-    } else {
-        QNetworkRequest req(QString("http://"+url+"/gpio/0"));
-        QNetworkReply *reply = manager.get(req);
-        ui->pushButton->setText(QString("Wyłącz"));
-    }
+    QNetworkRequest req;
+    url = ui->address->text();
+    if (on)
+        req = QNetworkRequest(QString("http://"+url+"/gpio/0"));
+    else
+        req = QNetworkRequest(QString("http://"+url+"/gpio/1"));
     on = !on;
+    QNetworkReply *reply = manager.get(req);
+}
+
+void MainWindow::on_timer_button_clicked()
+{
+    url = ui->address->text();
+    QString tms = ui->timeout->text();
+    int tm = tms.toInt();
+    QNetworkRequest req(QString("http://%1/timer/%2&").arg(url).arg(tm));
+    QNetworkReply *reply = manager.get(req);
+
 }
