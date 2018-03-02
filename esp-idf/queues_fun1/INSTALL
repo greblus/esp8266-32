@@ -1,0 +1,3 @@
+Install and configure Esp-idf. 
+Run: make app flash monitor
+
