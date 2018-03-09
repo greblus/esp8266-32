@@ -3,7 +3,7 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := tasks-fun4
+PROJECT_NAME := tasks6
 
 include $(IDF_PATH)/make/project.mk
 

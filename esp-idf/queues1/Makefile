@@ -3,7 +3,7 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := queues-fun1
+PROJECT_NAME := queues1
 
 include $(IDF_PATH)/make/project.mk
 
