@@ -22,9 +22,9 @@ pin = machine.Pin(22, machine.Pin.OUT)
 status = False
 pin.value(status)
 
-def sleep(n):
+def sleep(mins):
     global status
-    time.sleep(n)
+    time.sleep(mins*60)
     status = True
     pin.value(True)
 
