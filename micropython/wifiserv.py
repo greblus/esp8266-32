@@ -19,18 +19,8 @@ print('listening on', addr)
 
 import machine
 pin = machine.Pin(22, machine.Pin.OUT)
-status = False; prev_stat = False
+status = False
 pin.value(status)
-
-def onoff():
-        global prev_stat, status
-        while True:
-            if prev_stat != status:
-                pin.value(status)
-            prev_stat = status
-            time.sleep(1)
-
-_thread.start_new_thread(onoff, ())
 
 def sleep(n):
     global status
@@ -49,6 +39,7 @@ while True:
     print(line, status)
     if line.find(b'onoff') >= 0:
         status = not status
+        pin.value(status)
     if line.find(b'sleep') >= 0:
         s1 = line.find(b'sleep')+6
         s2 = line.find(b'H')-1
