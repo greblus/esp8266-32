@@ -1,8 +1,9 @@
 import network 
-import socket
+import usocket as socket
 sta_if = network.WLAN(network.STA_IF) 
 addr = socket.getaddrinfo(sta_if.ifconfig()[0], 8000)[0][-1]
 s = socket.socket()
+s.setblocking(False)
 s.bind(addr)
 s.listen(1)
 print('listening on', addr)
@@ -17,26 +18,24 @@ loop = asyncio.get_event_loop()
 
 async def sleep(mins):
     global status
-    endtime = loop.time() + mins*1000*60
-    while True:
-        if (loop.time() + 1.0) >= endtime:
-                break
-        await asyncio.sleep(0.1)
+    await asyncio.sleep(mins)
     status = False
     pin.value(status)
-    print('sleep finished')
 
 async def worker():
     global status
     while True:
-        cl, addr = s.accept()
-        print('client connected from', addr)
-        cl_file = cl.makefile('rwb', 0)
-        while True:
-            line = cl_file.readline()
-            if line:
-                break
+        line = None
+        try:
             await asyncio.sleep(0.1)
+            cl, addr = s.accept()
+            print('client connected from', addr)
+            cl_file = cl.makefile('rwb', 0)
+            while not line:
+                line = cl_file.readline()
+        except:
+            await asyncio.sleep(0.1)
+            continue
         print(line, status)
         if line.find(b'onoff') >= 0:
             status = not status
@@ -46,11 +45,10 @@ async def worker():
             s2 = line.find(b'H')-1
             try:
                 timeout = int(line[s1:s2])
-                await sleep(timeout)
+                loop.create_task(sleep(timeout*60))
             except ValueError:
                 print('/sleep needs a numeric timeout')
         cl.close()
-        await asyncio.sleep(0.1)
 
 loop.create_task(worker())
 loop.run_forever()
