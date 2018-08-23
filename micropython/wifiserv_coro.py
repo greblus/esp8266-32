@@ -27,7 +27,6 @@ async def worker():
     while True:
         line = None
         try:
-            await asyncio.sleep(0.1)
             cl, addr = s.accept()
             print('client connected from', addr)
             cl_file = cl.makefile('rwb', 0)
