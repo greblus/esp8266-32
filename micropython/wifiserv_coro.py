@@ -1,5 +1,7 @@
 import network 
 import usocket as socket
+import errno
+
 sta_if = network.WLAN(network.STA_IF) 
 addr = socket.getaddrinfo(sta_if.ifconfig()[0], 8000)[0][-1]
 s = socket.socket()
@@ -10,16 +12,25 @@ print('listening on', addr)
 
 import machine
 pin = machine.Pin(5, machine.Pin.OUT)
-status = True
+status = True; timeout = None
 pin.value(status)
 
 import uasyncio as asyncio
 loop = asyncio.get_event_loop()
 
-async def sleep(mins):
-    global status
-    await asyncio.sleep(mins)
-    status = False
+async def sleep(newtm):
+    global status, timeout
+    if timeout == newtm:
+        return
+    if timeout != None:
+        timeout = newtm
+        return
+    else:
+        timeout = newtm
+    while timeout > 0:
+        await asyncio.sleep(60)
+        timeout = timeout - 60
+    status = False; timeout = None
     pin.value(status)
 
 async def worker():
@@ -32,14 +43,15 @@ async def worker():
             cl_file = cl.makefile('rwb', 0)
             while not line:
                 line = cl_file.readline()
-        except:
-            await asyncio.sleep(0.1)
-            continue
+        except OSError as exc:
+            if exc.args[0] in [errno.ETIMEDOUT, errno.EAGAIN]:
+                await asyncio.sleep(0)
+                continue
         print(line, status)
-        if line.find(b'onoff') >= 0:
+        if 'onoff' in line:
             status = not status
             pin.value(status)
-        if line.find(b'sleep') >= 0:
+        if 'sleep' in line:
             s1 = line.find(b'sleep')+6
             s2 = line.find(b'H')-1
             try:
