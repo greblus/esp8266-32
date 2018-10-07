@@ -1,4 +1,4 @@
-package com.test.greblus.button;
+package com.test.greblus.upybtn;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

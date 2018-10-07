@@ -1,4 +1,4 @@
-package com.test.greblus.button;
+package com.test.greblus.upybtn;
 
 import org.junit.Test;
 
